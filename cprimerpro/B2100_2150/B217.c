@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int m,n;
+    if(scanf("%d %d", &m, &n) != 2)
+    return -1;
+
+    int **arrA = malloc(m*sizeof(int*));
+    int **arrA90c = malloc(n*sizeof(int*));
+
+    for(int i = 0; i < m; i++)
+    arrA[i] = malloc(n*sizeof(int));
+    for(int i = 0 ;i < n; i++)
+    arrA90c[i] = malloc(m*(sizeof(int)));
+
+    for(int i =0; i < m; i++)
+    {
+        for(int j = 0; j < n; j++)
+        {
+            if(scanf("%d", &arrA[i][j]) != 1)
+            {
+                for(int i = 0; i < n; i++)
+                free(arrA90c[i]);
+                free(arrA90c);
+                for(int i = 0; i < m; i++)
+                free(arrA[i]);
+                free(arrA);
+            }
+            arrA90c[j][m-1-i] = arrA[i][j];
+        }
+    }
+
+    for(int i = 0; i < n; i++)
+    {
+        for(int j = 0; j < m; j++)
+        {
+            printf("%d ", arrA90c[i][j]);
+            if(j == m -1)
+            printf("\n");
+        }
+    }
+
+    for(int i = 0; i < m; i++)
+    free(arrA[i]);
+    free(arrA);
+    for(int i = 0 ; i  < n; i++)
+    free(arrA90c[i]);
+    free(arrA90c);
+
+    return 0;
+
+}
