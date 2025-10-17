@@ -10,6 +10,10 @@
 对于按位置与或异或的优先级低于乘除和加减
 三元运算符的优先级可以说是非常低的一类，尤其是比输出<<的优先级要低，因此输出的时候记得加括号 cout << (cond ? A : B)这样
 
+0.3如果你想提高计算效率，可以采取以下两行指令:
+ios::sync_with_stdio(false);//“不要再让 C++ 的 cin/cout 与 C 的 scanf/printf 同步缓冲区。”,通常输入输出性能提高2～5倍
+cin.tie(nullptr);//默认情况下,每次执行 cin >> ... 之前，都会自动刷新 cout 的缓冲区,这样就避免了频繁的缓冲刷新，速度一般提升20%~30%。
+
 1.针对 n++, ++n, n+1的联系与区别:
 
 
@@ -96,5 +100,80 @@ while(ss >> word){
 
 2.若想有序输出，需要使用map/set,底层是红黑树，此时可以查询范围，并看到最大最小值和最小最大值等操作。
 
+5.关于图
+图的存储：首先我们要知道，图一般都有什么？
+图有端点N，端点之间有边M，边可能有方向也可能没有方向。
+五种常用的模板
+邻接表:
+vector<vector<int>> adj(N + 1);
 
+for (int i = 0; i < M; i++) {
+    int u, v;
+    cin >> u >> v;
+    adj[u].push_back(v);   // 有向图
+    // adj[v].push_back(u);  // 若是无向图
+}
+遍历所有出边：for (int v : adj[u]) {...}
 
+内存复杂度：O(N + M)
+
+访问复杂度：O(出度)
+邻接矩阵:适用稠密图/小规模图
+vector<vector<int>> g(N + 1, vector<int>(N + 1, 0));
+
+for (int i = 0; i < M; i++) {
+    int u, v;
+    cin >> u >> v;
+    g[u][v] = 1; // 或权重
+}
+判断是否有边：O(1)
+
+遍历所有边：O(N²)
+
+缺点：N=10⁵ 就占 10¹⁰ 空间，不可行。
+
+边列表：当我们关注边的时候
+struct Edge { int u, v, w; };
+vector<Edge> edges;
+
+for (int i = 0; i < M; i++) {
+    int u, v, w;
+    cin >> u >> v >> w;
+    edges.push_back({u, v, w});
+}
+不支持“从某个点找所有出边”
+
+支持“遍历所有边”
+→ 常用于：Kruskal 最小生成树、图遍历统计、离线构造题
+
+前向星:
+struct Edge {
+    int to, next;
+} e[MAXM];
+
+int head[MAXN], tot = 0;
+
+void addEdge(int u, int v) {
+    e[++tot] = {v, head[u]};
+    head[u] = tot;
+}
+所有出边存放在数组 e 中；
+
+head[u] 记录该点出边链表的起始下标；
+
+内存连续，访问快；
+
+不易动态修改。
+
+常用于：最短路（Dijkstra）、网络流、图搜索（BFS/DFS）
+
+哈希表
+vector<unordered_set<int>> adj(N + 1);
+
+adj[u].insert(v);
+if (adj[u].count(v)) { ... }
+支持 O(1) 平均插入/查找；
+
+不适合高性能算法；
+
+用在需要灵活修改的模拟题中。
