@@ -17,47 +17,6 @@ cin.tie(nullptr);//默认情况下,每次执行 cin >> ... 之前，都会自动
 1.针对 n++, ++n, n+1的联系与区别:
 
 
-2.排序，针对一个结构体中的两种或多种进行排序(如分数从小到大，再按姓名首字母排序)
-使用sort + 自定义比较函数
-
-#include <algorithm>
-#include <string>
-#include <vector>
-
-struct people{
-    int id;
-    string name;
-    int grade;
-}
-
-bool cmp(const people &a, const people &b){
-    if(a.grade != b.grade){
-        return a.grade > b.grade;
-    }
-    else{
-        return a.name < b.name;
-    }
-}
-
-int main(){
-    cin >> num;
-    vector<people> pp;
-    for(int i = 0; i < num; i++){
-        cin >> pp[i].id >> pp[i].name >> pp[i].grade;
-    }
-    sort(pp.begin(),pp.end(),cmp);
-}
-
-或者使用lambda表达式，将函数定义直接写在排序里面
-
-sort(pp.begin(), pp.end(),[](const people &a, const people &b) {
-    if(a.grade != b.grade)
-    return a.grade > b.grade;
-    else
-    return a.name < b.name;
-});
-
-
 3.关于vector的用法
 一维：
 如果已知容量大小num，直接使用vector<template> temp(num),之后直接通过下标访问即可
@@ -68,6 +27,8 @@ sort(pp.begin(), pp.end(),[](const people &a, const people &b) {
 此时的初始化默认为0，如果想初始化为其他值的话，选取 vector<vector<template>> temp(n,vector<template>(m,'想要的字符'))即可
 之后通过下标访问即可
 如果容量大小未知,需要在循环中添加 vector<vector<template>> temp; 
+
+同时应当注意，vector除非在push_back的情况下才能有值，如果你在输入的时候对于vector的一个值没有对应的push_back，那他的.size() = 0,因此不会有任何输出；
 
 4.对于string的用法
 4.1字符串的初始化
@@ -91,7 +52,7 @@ while(ss >> word){
     进行你需要的操作;
 }
 
-4.关于哈希表
+5.关于哈希表
 哈希表一般是用来快速查找某一元素或一个元素及其对应关系的方法；前一个是Key,后一个是Value
 1.查找元素,或者统计元素数量,使用无序表unordered_map<template,template> out//此处的out对应的是第二个template
 如果只想去掉重复元素或者快速判断有没有,可以使用unordered_set<template> out,此处只存储Key
@@ -100,80 +61,3 @@ while(ss >> word){
 
 2.若想有序输出，需要使用map/set,底层是红黑树，此时可以查询范围，并看到最大最小值和最小最大值等操作。
 
-5.关于图
-图的存储：首先我们要知道，图一般都有什么？
-图有端点N，端点之间有边M，边可能有方向也可能没有方向。
-五种常用的模板
-邻接表:
-vector<vector<int>> adj(N + 1);
-
-for (int i = 0; i < M; i++) {
-    int u, v;
-    cin >> u >> v;
-    adj[u].push_back(v);   // 有向图
-    // adj[v].push_back(u);  // 若是无向图
-}
-遍历所有出边：for (int v : adj[u]) {...}
-
-内存复杂度：O(N + M)
-
-访问复杂度：O(出度)
-邻接矩阵:适用稠密图/小规模图
-vector<vector<int>> g(N + 1, vector<int>(N + 1, 0));
-
-for (int i = 0; i < M; i++) {
-    int u, v;
-    cin >> u >> v;
-    g[u][v] = 1; // 或权重
-}
-判断是否有边：O(1)
-
-遍历所有边：O(N²)
-
-缺点：N=10⁵ 就占 10¹⁰ 空间，不可行。
-
-边列表：当我们关注边的时候
-struct Edge { int u, v, w; };
-vector<Edge> edges;
-
-for (int i = 0; i < M; i++) {
-    int u, v, w;
-    cin >> u >> v >> w;
-    edges.push_back({u, v, w});
-}
-不支持“从某个点找所有出边”
-
-支持“遍历所有边”
-→ 常用于：Kruskal 最小生成树、图遍历统计、离线构造题
-
-前向星:
-struct Edge {
-    int to, next;
-} e[MAXM];
-
-int head[MAXN], tot = 0;
-
-void addEdge(int u, int v) {
-    e[++tot] = {v, head[u]};
-    head[u] = tot;
-}
-所有出边存放在数组 e 中；
-
-head[u] 记录该点出边链表的起始下标；
-
-内存连续，访问快；
-
-不易动态修改。
-
-常用于：最短路（Dijkstra）、网络流、图搜索（BFS/DFS）
-
-哈希表
-vector<unordered_set<int>> adj(N + 1);
-
-adj[u].insert(v);
-if (adj[u].count(v)) { ... }
-支持 O(1) 平均插入/查找；
-
-不适合高性能算法；
-
-用在需要灵活修改的模拟题中。
