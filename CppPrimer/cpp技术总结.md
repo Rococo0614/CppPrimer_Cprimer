@@ -17,6 +17,47 @@ cin.tie(nullptr);//默认情况下,每次执行 cin >> ... 之前，都会自动
 1.针对 n++, ++n, n+1的联系与区别:
 
 
+2.排序，针对一个结构体中的两种或多种进行排序(如分数从小到大，再按姓名首字母排序)
+使用sort + 自定义比较函数
+
+#include <algorithm>
+#include <string>
+#include <vector>
+
+struct people{
+    int id;
+    string name;
+    int grade;
+}
+
+bool cmp(const people &a, const people &b){
+    if(a.grade != b.grade){
+        return a.grade > b.grade;
+    }
+    else{
+        return a.name < b.name;
+    }
+}
+
+int main(){
+    cin >> num;
+    vector<people> pp;
+    for(int i = 0; i < num; i++){
+        cin >> pp[i].id >> pp[i].name >> pp[i].grade;
+    }
+    sort(pp.begin(),pp.end(),cmp);
+}
+
+或者使用lambda表达式，将函数定义直接写在排序里面
+
+sort(pp.begin(), pp.end(),[](const people &a, const people &b) {
+    if(a.grade != b.grade)
+    return a.grade > b.grade;
+    else
+    return a.name < b.name;
+});
+
+
 3.关于vector的用法
 一维：
 如果已知容量大小num，直接使用vector<template> temp(num),之后直接通过下标访问即可
@@ -61,3 +102,11 @@ while(ss >> word){
 
 2.若想有序输出，需要使用map/set,底层是红黑树，此时可以查询范围，并看到最大最小值和最小最大值等操作。
 
+
+5.关于运算符号的优先问题
+大部分情况下不会出错，此处先简单列一些坑
+各种逻辑门的运算优先度比较低，取地址，引用解引用优先级很高
+三元运算符的优先级可以说是非常低的一类，尤其是比输出<<的优先级要低，因此输出的时候记得加括号 cout << (cond ? A : B)这样
+
+
+6.
