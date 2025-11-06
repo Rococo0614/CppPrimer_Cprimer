@@ -84,7 +84,7 @@ sort(pp.begin(), pp.end(),[](const people &a, const people &b) {
 #include <string>
 #include <sstream>
 
-sring line;
+string line;
 getline(cin, line);
 
 stringstream ss(line); //保存到ss输入流里面，重载之后就可以使用string了，类似与矩阵分别输入数字和直接输入矩阵，然后进行操作
