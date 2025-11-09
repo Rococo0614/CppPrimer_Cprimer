@@ -28,7 +28,7 @@ struct people{
     int id;
     string name;
     int grade;
-}
+}；
 
 bool cmp(const people &a, const people &b){
     if(a.grade != b.grade){
