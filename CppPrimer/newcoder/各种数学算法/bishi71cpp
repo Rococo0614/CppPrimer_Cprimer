@@ -1,0 +1,62 @@
+//通用解法慢的一批，找找题目的数据情况找特殊快解
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+long long power(long long base, long long exp) {
+    long long res = 1;
+    long long mod = 1000000007;
+    base %= mod;
+    while (exp > 0) {
+        if (exp % 2 == 1) res = (res * base) % mod;
+        base = (base * base) % mod;
+        exp /= 2;
+    }
+    return res;
+}
+
+long long modInverse(long long n) {
+    long long mod = 1000000007;
+    return power(n, mod - 2);
+}
+
+long long combinations(long long n, int k) {
+    if (k < 0 || k > n) {
+        return 0;
+    }
+    if (k == 0 || k == n) return 1;
+    if (k > n / 2) k = n - k;
+
+    long long mod = 1000000007;
+    
+    long long numerator = 1;
+    for (int i = 0; i < k; ++i) {
+        numerator = (numerator * (n - i)) % mod;
+    }
+    
+    long long denominator = 1;
+    for (int i = 1; i <= k; ++i) {
+        denominator = (denominator * i) % mod;
+    }
+    
+    return (numerator * modInverse(denominator)) % mod;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    long long n;
+    cin >> n;
+    
+    long long mod = 1000000007;
+    long long ans = 0;
+    ans = (ans + combinations(n, 5)) % mod;
+    ans = (ans + combinations(n, 6)) % mod;
+    ans = (ans + combinations(n, 7)) % mod;
+    
+    cout << ans << endl;
+    
+    return 0;
+}
